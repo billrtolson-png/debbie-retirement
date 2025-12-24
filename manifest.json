@@ -3,8 +3,8 @@
   "short_name": "Retirement",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#0f9b0f",
-  "theme_color": "#0f9b0f",
+  "background_color": "#C8FFE0",
+  "theme_color": "#7CFFB2",
   "icons": [
     {
       "src": "icon.svg",

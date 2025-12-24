@@ -5,36 +5,153 @@
 <title>Debbie Retirement Timer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
+
 <style>
 body {
-  margin:0;font-family:Arial;background:linear-gradient(135deg,#0f9b0f,#38ef7d);
-  color:white;display:flex;justify-content:center;align-items:center;min-height:100vh;text-align:center;
+  margin:0;
+  font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  background: linear-gradient(135deg, #7CFFB2, #C8FFE0);
+  color:#064420;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  text-align:center;
+  overflow:hidden;
 }
-.box {background:rgba(0,0,0,.2);padding:25px;border-radius:16px;width:90%;max-width:400px;}
-.num {font-size:1.6rem;font-weight:bold;}
+
+.box {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  padding:28px;
+  border-radius:22px;
+  width:92%;
+  max-width:420px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.15);
+}
+
+h2 {
+  margin-top:0;
+}
+
+.message {
+  font-size:1rem;
+  margin-bottom:14px;
+  font-style:italic;
+}
+
+.unit {
+  background: rgba(6,68,32,0.08);
+  margin:8px 0;
+  padding:12px;
+  border-radius:14px;
+}
+
+.number {
+  font-size:1.6rem;
+  font-weight:bold;
+}
+
+.anniversary {
+  margin-top:14px;
+  font-weight:bold;
+  color:#0a7a3a;
+}
+
+.confetti {
+  position:fixed;
+  width:8px;
+  height:8px;
+  background:green;
+  top:-10px;
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(360deg); }
+}
 </style>
 </head>
+
 <body>
 <div class="box">
 <h2>Debbie,<br>this is how long you’ve been retired for!</h2>
-<p><span class="num" id="years">0</span> years</p>
-<p><span class="num" id="months">0</span> months</p>
-<p><span class="num" id="days">0</span> days</p>
-<p><span class="num" id="seconds">0</span> seconds</p>
+<div class="message" id="message"></div>
+
+<div class="unit"><span class="number" id="years">0</span> years</div>
+<div class="unit"><span class="number" id="months">0</span> months</div>
+<div class="unit"><span class="number" id="weeks">0</span> weeks</div>
+<div class="unit"><span class="number" id="days">0</span> days</div>
+<div class="unit"><span class="number" id="hours">0</span> hours</div>
+<div class="unit"><span class="number" id="minutes">0</span> minutes</div>
+<div class="unit"><span class="number" id="seconds">0</span> seconds</div>
+
+<div class="anniversary" id="anniversary"></div>
 </div>
+
 <script>
-const start=new Date("2025-12-24T17:00:00");
-function tick(){
- const now=new Date(),d=Math.max(0,now-start);
- document.getElementById("seconds").textContent=Math.floor(d/1000);
- document.getElementById("days").textContent=Math.floor(d/86400000);
- let y=now.getFullYear()-start.getFullYear();
- let m=now.getMonth()-start.getMonth();
- if(m<0){y--;m+=12;}
- document.getElementById("years").textContent=y;
- document.getElementById("months").textContent=m;
+const startDate = new Date("2025-12-24T17:00:00");
+
+const messages = [
+  "No alarms. No meetings. Just freedom.",
+  "Every day is now your day 💚",
+  "You earned every second of this.",
+  "Retirement looks good on you.",
+  "Time well spent begins now."
+];
+
+function randomMessage() {
+  document.getElementById("message").textContent =
+    messages[Math.floor(Math.random() * messages.length)];
 }
-tick();setInterval(tick,1000);
+
+function confettiBurst() {
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["#7CFFB2","#38ef7d","#0a7a3a"][Math.floor(Math.random()*3)];
+    c.style.animationDuration = (2 + Math.random()*3) + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+function update() {
+  const now = new Date();
+  const diff = Math.max(0, now - startDate);
+
+  const totalSeconds = Math.floor(diff / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
+  const totalHours = Math.floor(totalMinutes / 60);
+  const totalDays = Math.floor(totalHours / 24);
+  const totalWeeks = Math.floor(totalDays / 7);
+
+  let years = now.getFullYear() - startDate.getFullYear();
+  let months = now.getMonth() - startDate.getMonth();
+  if (months < 0) { years--; months += 12; }
+
+  document.getElementById("years").textContent = years;
+  document.getElementById("months").textContent = months;
+  document.getElementById("weeks").textContent = totalWeeks;
+  document.getElementById("days").textContent = totalDays;
+  document.getElementById("hours").textContent = totalHours;
+  document.getElementById("minutes").textContent = totalMinutes;
+  document.getElementById("seconds").textContent = totalSeconds;
+
+  if (months === 0 && now.getDate() === startDate.getDate()) {
+    document.getElementById("anniversary").textContent =
+      "🎉 Happy Retirement Anniversary! 🎉";
+    confettiBurst();
+  } else {
+    document.getElementById("anniversary").textContent = "";
+  }
+}
+
+randomMessage();
+update();
+setInterval(update, 1000);
+setInterval(randomMessage, 15000);
 </script>
 </body>
 </html>

@@ -1,1 +1,1 @@
-Upload all files to GitHub Pages root.
+Debbie Retirement Timer v3 – lighter green, messages, confetti, anniversaries.
